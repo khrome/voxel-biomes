@@ -3,6 +3,31 @@ VoxelBiomes
 
 Experimental! But Working!
 
+A Realistic Example
+-------------------
+This is pretty close to what you would see in minecraft, but with only a few biomes (and dead trees :P ):
+
+
+    var Server = require('voxel-async-simulation');
+    var WorldBuilder = require('voxel-biomes');
+
+    var builder = new WorldBuilder();
+    builder.addBiome(require('voxel-biomes/biomes/hills'));
+    builder.addBiome(require('voxel-biomes/biomes/forest'));
+    builder.addBiome(require('voxel-biomes/biomes/village'));
+    builder.addBiome(require('voxel-biomes/biomes/plains'));
+
+    var app = new Server();
+    app.setGenerator(builder.buildGenerator(WorldBuilder.Segmenters.primes()));
+    app.setStorage(Server.Storage.memory());
+    app.listen(8081, function(){
+        console.log('Server listening on port 8081.');
+    });
+
+
+A Simple Example
+----------------
+
 This will produce a flat continuous 1 block thick slab as far as you can run. It will be material 1 in common areas, material 2 in uncommon areas and material 3 in rare areas, and because we pick a prime distribution, uncommon and rare biomes are more infrequent and continuous common areas increase in size as you move outward from the origin. Biomes are alternated in the order they are provided. In addition to hints from the distribution algorithm, `context` contains a deterministic `random()` function for use in generating this submesh, but still being reproducible.
 
     var WorldBuilder = require('./voxel-biome');

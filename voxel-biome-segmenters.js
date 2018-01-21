@@ -17,22 +17,26 @@ Segmenters.primes = function(fn){
         return Math.max(a, b);
     }
     return function(x, y, z){
-        var xIn = primelist.indexOf(Math.abs(x));
-        var zIn = primelist.indexOf(Math.abs(z));
+        var absX = Math.abs(x);
+        var absZ = Math.abs(z);
+        var xIn = primelist.indexOf(absX);
+        var zIn = primelist.indexOf(absZ);
         var xPos;
         var zPos;
         if(xIn === -1 && zIn === -1){
-            xPos = comesAfter(x, primelist);
-            zPos = comesAfter(z, primelist);
+            xPos = comesAfter(absX, primelist);
+            if(xPos === -1) xPos = 0;
+            zPos = comesAfter(absZ, primelist);
+            if(zPos === -1) zPos = 0;
             return {
-                type : 'common',
+                rarity : 'common',
                 index: intersector(xPos, zPos)
             }
         }
-        if(xIn === -1) return { type : 'uncommon', index: zIn };
-        if(zIn === -1) return { type : 'uncommon', index: xIn };
+        if(xIn === -1) return { rarity : 'uncommon', orientation: 'x', index: zIn };
+        if(zIn === -1) return { rarity : 'uncommon', orientation: 'z', index: xIn };
         return {
-            type : 'rare',
+            rarity : 'rare',
             index: intersector(xIn, zIn)
         }
     }
@@ -51,14 +55,14 @@ Segmenters.modulo = function(numA, numB, fn){
         var posZ = Math.floor(z / numY);
         if(remX === 0 && remZ === 0){
             return {
-                type : 'common',
+                rarity : 'common',
                 index: intersector(xPos, zPos)
             }
         }
-        if(remX === 0) return { type : 'uncommon', index: posX };
-        if(remZ === 0) return { type : 'uncommon', index: posZ };
+        if(remX === 0) return { rarity : 'uncommon', orientation: 'x', index: posX };
+        if(remZ === 0) return { rarity : 'uncommon', orientation: 'z', index: posZ };
         return {
-            type : 'rare',
+            rarity : 'rare',
             index: intersector(xPos, zPos)
         }
     }
