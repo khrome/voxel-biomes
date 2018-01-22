@@ -1,7 +1,7 @@
-VoxelBiomes
-===========
+voxel-biomes
+============
 
-Experimental! But Working!
+Distribute generators across a surface in a deterministic way to produce volumetric terrain.
 
 A Realistic Example
 -------------------

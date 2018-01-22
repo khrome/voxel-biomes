@@ -20,11 +20,15 @@ BiomeReducer.prototype.addBiome = function(biome){
             if(y<10) return 2;
             return 0;
         };
-        var underground = biome.underground || function(x, y, z){
-            return 1;
+        var underground = biome.underground || function(){
+            return function(x, y, z){
+                return 1;
+            };
         };
-        var air = biome.air || function(x, y, z){
-            return 0;
+        var air = biome.air || function(){
+            return function(x, y, z){
+                return 0;
+            };
         };
         biome.generator = function(subX, subY, subZ, context){
             if(typeof subX == 'string') subX = parseInt(subX);
