@@ -1,8 +1,8 @@
 var Generators = require('voxel-generators');
 
 module.exports = {
-    name : 'forest',
-    rarity : 'common',
+    name : 'woods',
+    rarity : 'uncommon',
     ground : function(subX, subY, subZ, context){
         var trees = [];
         var rand;
@@ -16,7 +16,7 @@ module.exports = {
         for(var x=0; x < 32; x++){
             for(var z=0; z < 32; z++){
                 if((context.random()*40) < 1){
-                    trees.addTree(x, z, 26, 3);
+                    trees.addTree(x, z, 21, 3);
                 }
                 trees[x + z*32] = rand < 1?Math.floor(11+context.random()*15):0;
             }
