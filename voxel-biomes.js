@@ -1,7 +1,8 @@
 Generators = require('voxel-generators');
 var rarities = ['common', 'uncommon', 'rare'];
 
-function BiomeReducer(){
+function BiomeReducer(options){
+    this.options = options || {};
     this.biomes = {
         common :[],
         uncommon : [],
@@ -15,6 +16,27 @@ BiomeReducer.prototype.addBiome = function(biome){
     if(!biome) throw new Error('No biome passed');
     if(!biome.name) throw new Error('Biomes require a name');
     if((biome.ground || biome.underground || biome.air) && !biome.generator){
+        var ob = this;
+        var lookup = ob.options.blockLookup;
+        //if we have a map, let's convert distill it
+        var map = lookup && biome[lookup.mapName] &&
+            JSON.parse(JSON.stringify(biome[lookup.mapName]));
+        var mapper;
+        if(map){
+            //console.log('+>>', map)
+            //replace each index with it's rendered index
+            Object.keys(map).forEach(function(key){
+                var block = lookup.block(map[key]);
+                //console.log(key, lookup.block(map[key]));
+                map[key] = lookup.block(map[key]).flatIndex;
+                //console.log('=> '+map[key]);
+            });
+            //console.log('->>', map)
+            mapper = function(value){
+                //console.log(value, map[value])
+                return map[value] || value;
+            }
+        }
         var ground = biome.ground || function(x, y, z){
             if(y==10) return 1;
             if(y<10) return 2;
@@ -22,7 +44,7 @@ BiomeReducer.prototype.addBiome = function(biome){
         };
         var underground = biome.underground || function(){
             return function(x, y, z){
-                return 1;
+                return 2;
             };
         };
         var air = biome.air || function(){
@@ -31,13 +53,16 @@ BiomeReducer.prototype.addBiome = function(biome){
             };
         };
         biome.generator = function(subX, subY, subZ, context){
+            var result;
             if(typeof subX == 'string') subX = parseInt(subX);
             if(typeof subY == 'string') subY = parseInt(subY);
             if(typeof subZ == 'string') subZ = parseInt(subZ);
-            if(subY === 0) return ground(subX, subY, subZ, context);
-            if(subY > 0) return air(subX, subY, subZ, context);
-            if(subY < 0) return underground(subX, subY, subZ, context);
-            console.log('ERRR!', typeof subY);
+            if(subY === 0) result = ground(subX, subY, subZ, context);
+            if(subY > 0) result = air(subX, subY, subZ, context);
+            if(subY < 0) result = underground(subX, subY, subZ, context);
+            return mapper?function(x, y, z){
+                return mapper(result(x, y, z))
+            }:result;
         }
     }
     if(

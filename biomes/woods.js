@@ -3,6 +3,12 @@ var Generators = require('voxel-generators');
 module.exports = {
     name : 'woods',
     rarity : 'uncommon',
+    mcmap : {
+        1 : 'minecraft:grass',
+        2 : 'minecraft:dirt',
+        3 : 'minecraft:log',
+        4 : 'minecraft:leaves',
+    },
     ground : function(subX, subY, subZ, context){
         var trees = [];
         var rand;
@@ -26,7 +32,6 @@ module.exports = {
             context.seed,
             Generators.Noise.perlin(context.random),
             lower, upper, function(x, y, z, value){
-                if(value === 1) return 16;
                 return treeRender(x, y, z, value);
             }
         );

@@ -55,14 +55,14 @@ Segmenters.modulo = function(numA, numB, fn){
         var posZ = Math.floor(z / numY);
         if(remX === 0 && remZ === 0){
             return {
-                rarity : 'common',
+                rarity : 'rare',
                 index: intersector(xPos, zPos)
             }
         }
         if(remX === 0) return { rarity : 'uncommon', orientation: 'x', index: posX };
         if(remZ === 0) return { rarity : 'uncommon', orientation: 'z', index: posZ };
         return {
-            rarity : 'rare',
+            rarity : 'common',
             index: intersector(xPos, zPos)
         }
     }
