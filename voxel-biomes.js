@@ -62,7 +62,7 @@ BiomeReducer.prototype.addBiome = function(biome){
             if(subY < 0) result = underground(subX, subY, subZ, context);
             return mapper?function(x, y, z){
                 return mapper(result(x, y, z))
-            }:result;
+            }:result(x, y, z);
         }
     }
     if(

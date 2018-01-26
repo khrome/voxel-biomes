@@ -1,7 +1,7 @@
 {
     "name": "voxel-biomes",
     "homepage": "https://github.com/khrome/voxel-biomes",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "main": "voxel-biomes.js",
     "description": "Biomes for voxeljs",
     "keywords": [
