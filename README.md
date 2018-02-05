@@ -82,7 +82,7 @@ On the Client
     var createGame = require('voxel-engine');
     var game = createGame({
         generateVoxelChunk: function(low, high, x, y, z){
-            return chunk = {
+            return {
                 position : [x, y, z],
                 voxels : generateSubmesh(x, y, z),
                 dims : [32, 32, 32],
