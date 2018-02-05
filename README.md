@@ -1,7 +1,7 @@
 voxel-biomes
 ============
 
-Distribute generators across a surface in a deterministic way to produce volumetric terrain.
+Distribute generators across a surface in a deterministic way to produce volumetric terrain. Each chunk is loaded without any information about the neighboring chunk, but the built in biomes produce continuous terrain, regardless.
 
 A Simple Example
 ----------------
