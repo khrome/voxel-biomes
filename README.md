@@ -3,35 +3,12 @@ voxel-biomes
 
 Distribute generators across a surface in a deterministic way to produce volumetric terrain.
 
-A Realistic Example
--------------------
-This is pretty close to what you would see in minecraft, but with only a few biomes (and dead trees :P ), with an even distribution of biome sizes throughout (3x3 areas which means for every 9 common biomes there are 6 uncommons and 2 rares:
-
-
-    var Server = require('voxel-async-simulation/server');
-    var WorldBuilder = require('voxel-biomes');
-
-    var builder = new WorldBuilder();
-    builder.addBiome(require('voxel-biomes/biomes/hills'));
-    builder.addBiome(require('voxel-biomes/biomes/forest'));
-    builder.addBiome(require('voxel-biomes/biomes/village'));
-    builder.addBiome(require('voxel-biomes/biomes/plains'));
-
-    var app = new Server();
-    app.setGenerator(builder.buildGenerator(
-        WorldBuilder.Segmenters.modulo(3)
-    ));
-    app.setStorage(Server.Storage.memory());
-    app.listen(8081, function(){
-        console.log('Server listening on port 8081.');
-    });
-
-
 A Simple Example
 ----------------
 
 This will produce a flat continuous 1 block thick slab as far as you can run. It will be material 1 in common areas, material 2 in uncommon areas and material 3 in rare areas, and because we pick a prime distribution, uncommon and rare biomes are more infrequent and continuous common areas increase in size as you move outward from the origin. Biomes are alternated in the order they are provided. In addition to hints from the distribution algorithm, `context` contains a deterministic `random()` function for use in generating this submesh, but still being reproducible.
 
+```javascript
     var WorldBuilder = require('./voxel-biome');
 
     var builder = new WorldBuilder();
@@ -65,70 +42,61 @@ This will produce a flat continuous 1 block thick slab as far as you can run. It
             }
         }
     });
+```
 
-Transforming Output
+A Realistic Example
 -------------------
-This is similar to the realistic example above, but uses hints on the biomes (`.mcmap`) to map from the default output to a loaded texture pack.
+This is pretty close to what you would see in minecraft, but with only a few biomes (and dead trees :P ), with an even distribution of biome sizes throughout (3x3 areas which means for every 9 common biomes there are 6 uncommons and 2 rares. See the [full configuration](docs/realistic.md).
 
-    var Server = require('voxel-async-simulation/server');
-    var WorldBuilder = require('voxel-biomes');
-    var texturePackLoad = require(
-        'voxel-minecraft-texture-pack-loader'
-    );
+Transforming Materials
+----------------------
+This is similar to the realistic example above, but uses hints on the biomes (`.mcmap`) to map from the default output to a loaded texture pack. See the [full configuration](docs/transform-textures.md).
 
-    var path = './texture-packs/PhotoRealistic';
-    texturePackLoad(path, function(err, texturePack){
-        if(err) return console.log('Textures failed to load.');
-        console.log('Textures Loaded.');
-        var builder = new WorldBuilder({
-            blockLookup : texturePack
-        });
-        builder.addBiome(require('voxel-biomes/biomes/hills'));
-        builder.addBiome(require('voxel-biomes/biomes/badlands'));
-        builder.addBiome(require('voxel-biomes/biomes/forest'));
-        builder.addBiome(require('voxel-biomes/biomes/woods'));
-        builder.addBiome(require('voxel-biomes/biomes/village'));
-        builder.addBiome(require('voxel-biomes/biomes/temple'));
-        builder.addBiome(require('voxel-biomes/biomes/megalith'));
-        builder.addBiome(require('voxel-biomes/biomes/plains'));
-        builder.addBiome(require('voxel-biomes/biomes/field'));
-        builder.addBiome(require('voxel-biomes/biomes/desert'));
+On the Client
+-------------
 
-        //serve it here
-    });
-
-
-Serve It
---------
-
- Then to integrate it with [voxel-async-simulation](https://github.com/khrome/voxel-async-simulation)
-
-    var app = new Server();
-    //need this for localhost
-    app.use(function(req, res, next){
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header(
-            'Access-Control-Allow-Methods',
-            'PUT, PATCH, GET, POST, DELETE, OPTIONS'
-        );
-        res.header(
-            'Access-Control-Allow-Headers',
-            'Origin, X-Requested-With, Content-Type, Accept'
-        );
-        res.setHeader(
-            'Access-Control-Allow-Credentials', true
-        );
-        next();
-    });
-    app.setGenerator(builder.buildGenerator(
+```javascript
+    var subgen = builder.buildGenerator(
         WorldBuilder.Segmenters.primes()
-    ));
-    app.setStorage(Server.Storage.memory());
-        app.listen(8081, function(){
-        console.log('Server listening on port 8081.');
-    });
+    )
 
- Otherwise you'll have to integrate it by hand... the `.buildGenerator()` function produces a function that looks something like:
+    function generateSubmesh(x, y, z){
+        var data = new Int8Array(32*32*32);
+        var xOff = 32 * 32;
+        yOff = 32;
+        var xPart;
+        var yPart;
+        var gen = subgen(x, y, z);
+        for(var x=0; x < 32; x++ ){
+            xPart = x * xOff;
+            for(var y=0; y < 32; y++ ){
+                yPart = y * yOff;
+                for(var z=0; z < 32; z++ ){
+                    data[xPart + yPart + z] = gen(x, y, z);
+                }
+            }
+        }
+        return data;
+    }
+
+    var createGame = require('voxel-engine');
+    var game = createGame({
+        generateVoxelChunk: function(low, high, x, y, z){
+            return chunk = {
+                position : [x, y, z],
+                voxels : generateSubmesh(x, y, z),
+                dims : [32, 32, 32],
+                empty : false
+            };
+        },
+        // (other options)
+    });
+```
+
+Other uses
+----------
+
+The `biome.buildGenerator(<distribution>)` function produces a function factory, which you can wire up to anything.. building a garbage collection mob that resets chunks to their 'natural' state? saving just diffs from the natural state? building an entropy system? go nuts! The structure is essentially:
 
     function(chunkX, chunkY, chunkZ){
         //chunk specific work here
