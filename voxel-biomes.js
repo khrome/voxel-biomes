@@ -61,8 +61,10 @@ BiomeReducer.prototype.addBiome = function(biome){
             if(subY > 0) result = air(subX, subY, subZ, context);
             if(subY < 0) result = underground(subX, subY, subZ, context);
             return mapper?function(x, y, z){
-                return mapper(result(x, y, z))
-            }:result(x, y, z);
+                return mapper(result(x, y, z));
+            }:function(x, y, z){
+                return result(x, y, z);
+            };
         }
     }
     if(
@@ -73,6 +75,25 @@ BiomeReducer.prototype.addBiome = function(biome){
         throw new Error('Unknown rarity:'+biome.rarity);
     }
     this.biomes[biome.rarity].push(biome);
+}
+
+function generateSubmesh(x, y, z, subgen){
+    var data = new Int8Array(32*32*32);
+    var xOff = 32 * 32;
+    yOff = 32;
+    var xPart;
+    var yPart;
+    var gen = subgen(x, y, z);
+    for(var x=0; x < 32; x++ ){
+        xPart = x * xOff;
+        for(var y=0; y < 32; y++ ){
+            yPart = y * yOff;
+            for(var z=0; z < 32; z++ ){
+                data[xPart + yPart + z] = gen(x, y, z);
+            }
+        }
+    }
+    return data;
 }
 
 BiomeReducer.prototype.buildGenerator = function(algorithm){
@@ -90,7 +111,7 @@ BiomeReducer.prototype.buildGenerator = function(algorithm){
         uncommon : uncommon,
         rare : rare,
     }
-    return function(subX, subY, subZ){
+    var result = function(subX, subY, subZ){
         var selection = fn(subX, subY, subZ);
         selection.seed = subX+'|'+subY+'|'+subZ;
         selection.random = Generators.Random.seed(38);
@@ -100,6 +121,12 @@ BiomeReducer.prototype.buildGenerator = function(algorithm){
         selection.type = biome.name;
         return biome.generator(subX, subY, subZ, selection);
     }
+
+    result.generateSubmesh = function(x, y, z){
+        return generateSubmesh(x, y, z, result)
+    }
+
+    return result;
 }
 
 module.exports = BiomeReducer;
