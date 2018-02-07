@@ -3,7 +3,7 @@ voxel-biomes
 
 Distribute generators across a surface in a deterministic way to produce volumetric terrain.
 
-![](docs/screenshot.png | width=400)
+<img src="https://raw.githubusercontent.com/khrome/voxel-biomes/master/docs/screenshot.png" alt="terrain" width="400px">
 [See it in action](https://khrome.github.io/voxel-biome-examples/index.html)(requires WebGL)
 
 Each chunk is loaded without any information about the neighboring chunk, but the built in biomes produce continuous terrain, regardless.
