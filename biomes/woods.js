@@ -13,7 +13,7 @@ module.exports = {
         var trees = [];
         var rand;
         var lower = 8;
-        var upper = 12;
+        var upper = 13;
         var trees = new Generators.Objects.Trees({
             groundHeightHigh : upper,
             groundHeightLow : lower,

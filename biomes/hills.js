@@ -11,7 +11,7 @@ module.exports = {
         return Generators.SeamlessNoiseFactory(
             context.seed,
             Generators.Noise.perlin(context.random),
-            4, 19, function(x, y, z, value){
+            5, 16, function(x, y, z, value){
                 return value;
             }
         );

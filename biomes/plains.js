@@ -7,10 +7,12 @@ module.exports = {
         2 : 'minecraft:dirt'
     },
     ground : function(subX, subY, subZ, context){
-        return function(x, y, z){
-            if(y==10) return 1;
-            if(y<10) return 2;
-            return 0;
-        }
+        return Generators.SeamlessNoiseFactory(
+            context.seed,
+            Generators.Noise.perlin(context.random),
+            8, 12, function(x, y, z, value){
+                return value;
+            }
+        );
     }
 }

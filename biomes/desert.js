@@ -6,9 +6,12 @@ module.exports = {
         1 : 'minecraft:sand'
     },
     ground : function(subX, subY, subZ, context){
-        return function(x, y, z){
-            if(y<=10) return 1;
-            return 0;
-        }
+        return Generators.SeamlessNoiseFactory(
+            context.seed,
+            Generators.Noise.perlin(context.random),
+            6, 14, function(x, y, z, value){
+                return value;
+            }
+        );
     }
 }
