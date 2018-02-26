@@ -9,9 +9,7 @@ module.exports = {
         3 : 'minecraft:log',
         4 : 'minecraft:leaves',
     },
-    ground : function(subX, subY, subZ, context){
-        var trees = [];
-        var rand;
+    groundGeometry : function(subX, subY, subZ, context){
         var lower = 8;
         var upper = 12;
         var trees = new Generators.Objects.Trees({
@@ -19,21 +17,19 @@ module.exports = {
             groundHeightLow : lower,
             random : context.random
         });
+        var geometry = new Biomes.GeometryReducer(
+            Generators.SeamlessNoiseFactory(
+                context.seed,
+                Generators.Noise.perlin(context.random),
+                lower, upper
+            )
+        );
         for(var x=0; x < 32; x++){
             for(var z=0; z < 32; z++){
-                if((context.random()*40) < 1){
-                    trees.addTree(x, z, 26, 3);
-                }
-                trees[x + z*32] = rand < 1?Math.floor(11+context.random()*15):0;
+                if((context.random()*35) < 1) trees.addTree(x, z, 26, 3);
             }
         }
-        var treeRender = trees.buildGenerator();
-        return Generators.SeamlessNoiseFactory(
-            context.seed,
-            Generators.Noise.perlin(context.random),
-            lower, upper, function(x, y, z, value){
-                return treeRender(x, y, z, value);
-            }
-        );
+        geometry.add(trees);
+        return geometry;
     }
 }
