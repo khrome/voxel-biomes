@@ -23,7 +23,7 @@ Classes
 - `WorldBuilder` - The main export: an object which distributes biomes across the world and exports a single, composite generator.
     - `.addBiome(<biome object>)`
     - `.buildGenerator(<distribution algorithm>)`
-- `.GeometryReducer` - A voxel reducer you pass a generator function to in the constructor, then can pass coordinate lists, or `require('voxel-generators/objects/*')` instances.
+- `.GeometryReducer(<generator function>)` - A voxel reducer you pass a generator function to in the constructor, then can pass coordinate lists, or `require('voxel-generators/objects/*')` instances.
     - `.integrated(context)` - export a submesh generator which minimizes the cost of generating a submesh
     - `.calculated(context)` - export a voxel generator factory which minimizes the cost of a calculation for any one voxel
     - `.add(<geometry or voxel-generator/object>)` - add more objects into the scene
@@ -37,12 +37,12 @@ Examples
 - [Client Only](https://github.com/khrome/voxel-biome-examples/blob/master/client.js) - A pure client side implementation which you can [check out live](https://khrome.github.io/voxel-biome-examples/index.html).
 - **Other Uses** - The `biome.buildGenerator(<distribution>)` function produces a function factory, which you can wire up to anything.. building a garbage collection mob that resets chunks to their 'natural' state? saving just diffs from the natural state? building an entropy system? go nuts! The structure is essentially:
 
-    function(chunkX, chunkY, chunkZ){
-        //chunk specific work here
-        return function(x, y, z){
-            //voxel specific work here
+        function(chunkX, chunkY, chunkZ){
+            //chunk specific work here
+            return function(x, y, z){
+                //voxel specific work here
+            }
         }
-    }
 
 Good Luck!
 
