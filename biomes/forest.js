@@ -1,4 +1,5 @@
-var Generators = require('voxel-generators');
+var Trees = require('voxel-generators/objects/trees');
+var Biomes = require('../voxel-biomes');
 
 module.exports = {
     name : 'forest',
@@ -12,11 +13,7 @@ module.exports = {
     groundGeometry : function(subX, subY, subZ, context){
         var lower = 8;
         var upper = 12;
-        var trees = new Generators.Objects.Trees({
-            groundHeightHigh : upper,
-            groundHeightLow : lower,
-            random : context.random
-        });
+        var trees = new Trees();
         var geometry = new Biomes.GeometryReducer(
             Generators.SeamlessNoiseFactory(
                 context.seed,
@@ -24,9 +21,14 @@ module.exports = {
                 lower, upper
             )
         );
-        for(var x=0; x < 32; x++){
-            for(var z=0; z < 32; z++){
-                if((context.random()*35) < 1) trees.addTree(x, z, 26, 3);
+        for(var x=1; x < 30; x++){
+            for(var z=1; z < 30; z++){
+                if((context.random()*35) < 1) trees.add({
+                    x:x,
+                    y:0,
+                    z:z,
+                    height:26
+                });
             }
         }
         geometry.add(trees);

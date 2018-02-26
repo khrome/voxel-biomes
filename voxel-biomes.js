@@ -93,7 +93,7 @@ BiomeReducer.GeometryReducer.prototype.calculated = function(context){
         var result = 0;
         transformedObjects.forEach(function(o){
             if(o.buildGenerator || o.generator){
-                result = (o.generator || (o.generator = o.buildGenerator(context.random)))(x, y, z, 0);
+                result = (o.generator || (o.generator = o.buildGenerator(context)))(x, y, z, 0);
                 return;
             }
             if(result) return;
