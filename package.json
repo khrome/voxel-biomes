@@ -1,7 +1,7 @@
 {
     "name": "voxel-biomes",
     "homepage": "https://github.com/khrome/voxel-biomes",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "main": "voxel-biomes.js",
     "description": "Biomes for voxeljs",
     "keywords": [
@@ -23,7 +23,9 @@
         "url": "git://github.com/khrome/voxel-biomes.git"
     },
     "dependencies": {
+        "mocha": "^5.0.1",
         "primes": "*",
+        "should": "^13.2.1",
         "voxel-generators": "*"
     },
     "devDependencies": {},

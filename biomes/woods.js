@@ -1,4 +1,7 @@
-var Generators = require('voxel-generators');
+var Trees = require('voxel-generators/objects/trees');
+//console.log("WHAT THE FUCK");
+//console.log('??', Trees);
+//process.exit();
 
 var Biomes = require('../voxel-biomes');
 
@@ -11,41 +14,10 @@ module.exports = {
         3 : 'minecraft:log',
         4 : 'minecraft:leaves',
     },
-    /*ground : function(subX, subY, subZ, context){
-        var trees = [];
-        var rand;
-        var lower = 8;
-        var upper = 13;
-        var trees = new Generators.Objects.Trees({
-            groundHeightHigh : upper,
-            groundHeightLow : lower,
-            random : context.random
-        });
-        for(var x=0; x < 32; x++){
-            for(var z=0; z < 32; z++){
-                if((context.random()*40) < 1){
-                    trees.addTree(x, z, 21, 3);
-                }
-                trees[x + z*32] = rand < 1?Math.floor(11+context.random()*15):0;
-            }
-        }
-        var treeRender = trees.buildGenerator();
-        return Generators.SeamlessNoiseFactory(
-            context.seed,
-            Generators.Noise.perlin(context.random),
-            lower, upper, function(x, y, z, value){
-                return treeRender(x, y, z, value);
-            }
-        );
-    }*/
     groundGeometry : function(subX, subY, subZ, context){
         var lower = 8;
         var upper = 13;
-        var trees = new Generators.Objects.Trees({
-            groundHeightHigh : upper,
-            groundHeightLow : lower,
-            random : context.random
-        });
+        var trees = new Trees();
         var geometry = new Biomes.GeometryReducer(
             Generators.SeamlessNoiseFactory(
                 context.seed,
@@ -53,9 +25,14 @@ module.exports = {
                 lower, upper
             )
         );
-        for(var x=0; x < 32; x++){
-            for(var z=0; z < 32; z++){
-                if((context.random()*40) < 1) trees.addTree(x, z, 21, 3);
+        for(var x=2; x < 30; x++){
+            for(var z=2; z < 30; z++){ //this is view perspective z
+                if((context.random()*40) < 1) trees.add({
+                    x:x,
+                    y:0,
+                    z:z,
+                    height:20
+                });
             }
         }
         geometry.add(trees);
