@@ -1,4 +1,3 @@
-var Generators = require('voxel-generators');
 
 module.exports = {
     name : 'megalith',

@@ -1,7 +1,7 @@
 voxel-biomes
 ============
 
-Distribute generators across a surface in a deterministic way to produce volumetric terrain.
+Distribute generators across a surface in a deterministic way to produce infinite volumetric terrain.
 
 <img src="https://raw.githubusercontent.com/khrome/voxel-biomes/master/docs/screenshot.png" alt="terrain" width="800px">
 

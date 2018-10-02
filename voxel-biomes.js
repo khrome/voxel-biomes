@@ -1,4 +1,4 @@
-Generators = require('voxel-generators');
+var Generators = require('voxel-generators');
 var rarities = ['common', 'uncommon', 'rare'];
 
 function BiomeReducer(options){

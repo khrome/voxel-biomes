@@ -1,9 +1,6 @@
 var Trees = require('voxel-generators/objects/trees');
-//console.log("WHAT THE FUCK");
-//console.log('??', Trees);
-//process.exit();
-
 var Biomes = require('../voxel-biomes');
+var Generators = require('voxel-generators');
 
 module.exports = {
     name : 'woods',

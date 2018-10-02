@@ -1,5 +1,6 @@
 var Trees = require('voxel-generators/objects/trees');
 var Biomes = require('../voxel-biomes');
+var Generators = require('voxel-generators');
 
 module.exports = {
     name : 'forest',
@@ -9,6 +10,8 @@ module.exports = {
         2 : 'minecraft:dirt',
         3 : 'minecraft:log',
         4 : 'minecraft:leaves',
+        5 : 'minecraft:log',
+        6 : 'minecraft:leaves',
     },
     groundGeometry : function(subX, subY, subZ, context){
         var lower = 8;

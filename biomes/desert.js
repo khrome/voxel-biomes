@@ -1,4 +1,4 @@
-
+var Generators = require('voxel-generators');
 module.exports = {
     name : 'desert',
     rarity : 'common',
