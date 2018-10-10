@@ -140,6 +140,9 @@ BiomeReducer.prototype.buildGenerator = function(algorithm, offsets){
             },
             context : function(){
                 return selection;
+            },
+            biome : function(){
+                return biome;
             }
         }
     }
